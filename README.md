@@ -7,6 +7,7 @@
 [![Platform](https://img.shields.io/cocoapods/p/ZoomImageView.svg?style=flat)](http://cocoapods.org/pods/ZoomImageView)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
+![](https://d17oy1vhnax1f7.cloudfront.net/items/240M2T2x2Z2D3W3m2w2z/Screen%20Recording%202016-10-15%20at%2008.53%20PM.gif?v=471468b2)
 TODO:
 
 ## Requirements
