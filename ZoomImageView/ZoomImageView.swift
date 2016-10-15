@@ -1,0 +1,176 @@
+// ZoomImageView.swift
+//
+// Copyright (c) 2016 muukii
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+import UIKit
+import AVFoundation
+
+open class ZoomImageView: UIView {
+    
+    public var image: UIImage? {
+        get {
+            return self.imageView.image
+        }
+        set {
+            self.imageView.image = newValue
+        }
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setup()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.setup()
+    }
+    
+    private func setup() {
+        
+        self.addSubview(self.imageView)
+        
+        self.imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            NSLayoutConstraint(item: self.imageView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: self.imageView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: self.imageView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: self.imageView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0),
+            ])
+    }
+    
+    private let imageView = InternalZoomImageView()
+}
+
+internal final class InternalZoomImageView: UIScrollView, UIScrollViewDelegate {
+    
+    var image: UIImage? {
+        get {
+            return self.imageView.image
+        }
+        set {
+            
+            self.imageView.image = newValue
+            self.oldSize = nil
+            self.updateImageView()
+        }
+    }
+    
+    private let imageView = UIImageView()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setup()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.setup()
+    }
+    
+    private func setup() {
+        
+        self.backgroundColor = UIColor.clear
+        self.delegate = self
+        self.imageView.contentMode = .scaleAspectFill
+        self.addSubview(self.imageView)
+    }
+    
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+    }
+    
+    override func layoutSubviews() {
+        
+        super.layoutSubviews()
+        
+        print("[scrollview]",self.frame, self.bounds)
+        
+        if self.imageView.image != nil && oldSize != self.bounds.size {
+            
+            self.updateImageView()
+            self.oldSize = self.bounds.size
+        }
+        
+        if self.imageView.frame.width <= self.bounds.width {
+            self.imageView.center.x = self.bounds.width * 0.5
+        }
+        
+        if self.imageView.frame.height <= self.bounds.height {
+            self.imageView.center.y = self.bounds.height * 0.5
+        }
+        
+        print(self.imageView.frame)
+    }
+    
+    override func updateConstraints() {
+        super.updateConstraints()
+        self.updateImageView()
+    }
+    
+    private var oldSize: CGSize?
+    
+    private func updateImageView() {
+        guard let image = self.imageView.image else { return }
+        var size = AVMakeRect(aspectRatio: image.size, insideRect: UIScreen.main.bounds).size
+        
+        size.height = round(size.height)
+        size.width = round(size.width)
+    
+        self.maximumZoomScale = image.size.width / size.width
+        self.imageView.bounds.size = size
+        self.contentSize = size
+    }
+    
+    // MARK: - UIScrollViewDelegate
+    
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        self.imageView.center = self.contentCenter(forBoundingSize: self.bounds.size, contentSize: self.contentSize)
+    }
+    
+    func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
+        
+    }
+    
+    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+        
+    }
+    
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return self.imageView
+    }
+    
+    private func contentCenter(forBoundingSize boundingSize: CGSize, contentSize: CGSize) -> CGPoint {
+        
+        /// When the zoom scale changes i.e. the image is zoomed in or out, the hypothetical center
+        /// of content view changes too. But the default Apple implementation is keeping the last center
+        /// value which doesn't make much sense. If the image ratio is not matching the screen
+        /// ratio, there will be some empty space horizontaly or verticaly. This needs to be calculated
+        /// so that we can get the correct new center value. When these are added, edges of contentView
+        /// are aligned in realtime and always aligned with corners of scrollview.
+        
+        let horizontalOffest = (boundingSize.width > contentSize.width) ? ((boundingSize.width - contentSize.width) * 0.5): 0.0
+        let verticalOffset = (boundingSize.height > contentSize.height) ? ((boundingSize.height - contentSize.height) * 0.5): 0.0
+        
+        return CGPoint(x: contentSize.width * 0.5 + horizontalOffest,  y: contentSize.height * 0.5 + verticalOffset)
+    }
+}
