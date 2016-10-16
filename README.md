@@ -7,7 +7,7 @@
 [![Platform](https://img.shields.io/cocoapods/p/ZoomImageView.svg?style=flat)](http://cocoapods.org/pods/ZoomImageView)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-![](https://d17oy1vhnax1f7.cloudfront.net/items/240M2T2x2Z2D3W3m2w2z/Screen%20Recording%202016-10-15%20at%2008.53%20PM.gif?v=471468b2)
+![](https://d17oy1vhnax1f7.cloudfront.net/items/2h0x2e3R1Q2x023N0j0s/Screen%20Recording%202016-10-16%20at%2005.12%20PM.gif?v=2dce98f3)
 
 UI component library to expand the photo, such as Apple's Photos app. 🗻
 
