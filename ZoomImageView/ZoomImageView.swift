@@ -92,7 +92,14 @@ internal final class InternalZoomImageView: UIScrollView, UIScrollViewDelegate {
         self.backgroundColor = UIColor.clear
         self.delegate = self
         self.imageView.contentMode = .scaleAspectFill
+        self.showsVerticalScrollIndicator = false
+        self.showsHorizontalScrollIndicator = false
+        self.decelerationRate = UIScrollViewDecelerationRateFast
         self.addSubview(self.imageView)
+        
+        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleDoubleTap))
+        doubleTapGesture.numberOfTapsRequired = 2
+        self.addGestureRecognizer(doubleTapGesture)
     }
     
     override func didMoveToSuperview() {
@@ -102,9 +109,7 @@ internal final class InternalZoomImageView: UIScrollView, UIScrollViewDelegate {
     override func layoutSubviews() {
         
         super.layoutSubviews()
-        
-        print("[scrollview]",self.frame, self.bounds)
-        
+                
         if self.imageView.image != nil && oldSize != self.bounds.size {
             
             self.updateImageView()
@@ -118,8 +123,6 @@ internal final class InternalZoomImageView: UIScrollView, UIScrollViewDelegate {
         if self.imageView.frame.height <= self.bounds.height {
             self.imageView.center.y = self.bounds.height * 0.5
         }
-        
-        print(self.imageView.frame)
     }
     
     override func updateConstraints() {
@@ -139,6 +142,14 @@ internal final class InternalZoomImageView: UIScrollView, UIScrollViewDelegate {
         self.maximumZoomScale = image.size.width / size.width
         self.imageView.bounds.size = size
         self.contentSize = size
+    }
+    
+    @objc private func handleDoubleTap() {
+        if self.zoomScale == 1 {
+            self.setZoomScale(max(1, self.maximumZoomScale / 3), animated: true)
+        } else {
+            self.setZoomScale(1, animated: true)
+        }
     }
     
     // MARK: - UIScrollViewDelegate
