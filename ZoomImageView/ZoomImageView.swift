@@ -23,165 +23,127 @@
 import UIKit
 import AVFoundation
 
-open class ZoomImageView: UIView {
-    
-    public var image: UIImage? {
-        get {
-            return self.imageView.image
-        }
-        set {
-            self.imageView.image = newValue
-        }
-    }
-    
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.setup()
-    }
-    
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.setup()
-    }
-    
-    private func setup() {
-        
-        self.addSubview(self.imageView)
-        
-        self.imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            NSLayoutConstraint(item: self.imageView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: self.imageView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: self.imageView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: self.imageView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0),
-            ])
-    }
-    
-    private let imageView = InternalZoomImageView()
-}
+open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
 
-internal final class InternalZoomImageView: UIScrollView, UIScrollViewDelegate {
-    
-    var image: UIImage? {
-        get {
-            return self.imageView.image
-        }
-        set {
-            
-            self.imageView.image = newValue
-            self.oldSize = nil
-            self.updateImageView()
-        }
+  private let imageView = UIImageView()
+
+  open var image: UIImage? {
+    get {
+      return imageView.image
     }
-    
-    private let imageView = UIImageView()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.setup()
+    set {
+
+      imageView.image = newValue
+      oldSize = nil
+      updateImageView()
     }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.setup()
+  }
+
+  public override init(frame: CGRect) {
+    super.init(frame: frame)
+    setup()
+  }
+
+  public required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+    setup()
+  }
+
+  open func setup() {
+
+    backgroundColor = UIColor.clear
+    delegate = self
+    imageView.contentMode = .scaleAspectFill
+    showsVerticalScrollIndicator = false
+    showsHorizontalScrollIndicator = false
+    decelerationRate = UIScrollViewDecelerationRateFast
+    addSubview(imageView)
+
+    let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
+    doubleTapGesture.numberOfTapsRequired = 2
+    addGestureRecognizer(doubleTapGesture)
+  }
+
+  open override func didMoveToSuperview() {
+    super.didMoveToSuperview()
+  }
+
+  open override func layoutSubviews() {
+
+    super.layoutSubviews()
+
+    if imageView.image != nil && oldSize != bounds.size {
+
+      updateImageView()
+      oldSize = bounds.size
     }
-    
-    private func setup() {
-        
-        self.backgroundColor = UIColor.clear
-        self.delegate = self
-        self.imageView.contentMode = .scaleAspectFill
-        self.showsVerticalScrollIndicator = false
-        self.showsHorizontalScrollIndicator = false
-        self.decelerationRate = UIScrollViewDecelerationRateFast
-        self.addSubview(self.imageView)
-        
-        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleDoubleTap))
-        doubleTapGesture.numberOfTapsRequired = 2
-        self.addGestureRecognizer(doubleTapGesture)
+
+    if imageView.frame.width <= bounds.width {
+      imageView.center.x = bounds.width * 0.5
     }
-    
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
+
+    if imageView.frame.height <= bounds.height {
+      imageView.center.y = bounds.height * 0.5
     }
-    
-    override func layoutSubviews() {
-        
-        super.layoutSubviews()
-                
-        if self.imageView.image != nil && oldSize != self.bounds.size {
-            
-            self.updateImageView()
-            self.oldSize = self.bounds.size
-        }
-        
-        if self.imageView.frame.width <= self.bounds.width {
-            self.imageView.center.x = self.bounds.width * 0.5
-        }
-        
-        if self.imageView.frame.height <= self.bounds.height {
-            self.imageView.center.y = self.bounds.height * 0.5
-        }
+  }
+
+  open override func updateConstraints() {
+    super.updateConstraints()
+    updateImageView()
+  }
+
+  private var oldSize: CGSize?
+
+  private func updateImageView() {
+    guard let image = imageView.image else { return }
+    var size = AVMakeRect(aspectRatio: image.size, insideRect: UIScreen.main.bounds).size
+
+    size.height = round(size.height)
+    size.width = round(size.width)
+
+    maximumZoomScale = image.size.width / size.width
+    imageView.bounds.size = size
+    contentSize = size
+  }
+
+  @objc private func handleDoubleTap() {
+    if self.zoomScale == 1 {
+      setZoomScale(max(1, maximumZoomScale / 3), animated: true)
+    } else {
+      setZoomScale(1, animated: true)
     }
-    
-    override func updateConstraints() {
-        super.updateConstraints()
-        self.updateImageView()
-    }
-    
-    private var oldSize: CGSize?
-    
-    private func updateImageView() {
-        guard let image = self.imageView.image else { return }
-        var size = AVMakeRect(aspectRatio: image.size, insideRect: UIScreen.main.bounds).size
-        
-        size.height = round(size.height)
-        size.width = round(size.width)
-    
-        self.maximumZoomScale = image.size.width / size.width
-        self.imageView.bounds.size = size
-        self.contentSize = size
-    }
-    
-    @objc private func handleDoubleTap() {
-        if self.zoomScale == 1 {
-            self.setZoomScale(max(1, self.maximumZoomScale / 3), animated: true)
-        } else {
-            self.setZoomScale(1, animated: true)
-        }
-    }
-    
-    // MARK: - UIScrollViewDelegate
-    
-    func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        self.imageView.center = self.contentCenter(forBoundingSize: self.bounds.size, contentSize: self.contentSize)
-    }
-    
-    func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
-        
-    }
-    
-    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
-        
-    }
-    
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return self.imageView
-    }
-    
-    private func contentCenter(forBoundingSize boundingSize: CGSize, contentSize: CGSize) -> CGPoint {
-        
-        /// When the zoom scale changes i.e. the image is zoomed in or out, the hypothetical center
-        /// of content view changes too. But the default Apple implementation is keeping the last center
-        /// value which doesn't make much sense. If the image ratio is not matching the screen
-        /// ratio, there will be some empty space horizontaly or verticaly. This needs to be calculated
-        /// so that we can get the correct new center value. When these are added, edges of contentView
-        /// are aligned in realtime and always aligned with corners of scrollview.
-        
-        let horizontalOffest = (boundingSize.width > contentSize.width) ? ((boundingSize.width - contentSize.width) * 0.5): 0.0
-        let verticalOffset = (boundingSize.height > contentSize.height) ? ((boundingSize.height - contentSize.height) * 0.5): 0.0
-        
-        return CGPoint(x: contentSize.width * 0.5 + horizontalOffest,  y: contentSize.height * 0.5 + verticalOffset)
-    }
+  }
+
+  // MARK: - UIScrollViewDelegate
+
+  public func scrollViewDidZoom(_ scrollView: UIScrollView) {
+    imageView.center = contentCenter(forBoundingSize: bounds.size, contentSize: contentSize)
+  }
+
+  public func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
+
+  }
+
+  public func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+
+  }
+
+  public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+    return imageView
+  }
+
+  private func contentCenter(forBoundingSize boundingSize: CGSize, contentSize: CGSize) -> CGPoint {
+
+    /// When the zoom scale changes i.e. the image is zoomed in or out, the hypothetical center
+    /// of content view changes too. But the default Apple implementation is keeping the last center
+    /// value which doesn't make much sense. If the image ratio is not matching the screen
+    /// ratio, there will be some empty space horizontaly or verticaly. This needs to be calculated
+    /// so that we can get the correct new center value. When these are added, edges of contentView
+    /// are aligned in realtime and always aligned with corners of scrollview.
+
+    let horizontalOffest = (boundingSize.width > contentSize.width) ? ((boundingSize.width - contentSize.width) * 0.5): 0.0
+    let verticalOffset = (boundingSize.height > contentSize.height) ? ((boundingSize.height - contentSize.height) * 0.5): 0.0
+
+    return CGPoint(x: contentSize.width * 0.5 + horizontalOffest,  y: contentSize.height * 0.5 + verticalOffset)
+  }
 }
