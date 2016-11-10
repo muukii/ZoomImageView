@@ -96,7 +96,7 @@ open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
 
   private func updateImageView() {
     guard let image = imageView.image else { return }
-    var size = AVMakeRect(aspectRatio: image.size, insideRect: UIScreen.main.bounds).size
+    var size = AVMakeRect(aspectRatio: image.size, insideRect: bounds).size
 
     size.height = round(size.height)
     size.width = round(size.width)
