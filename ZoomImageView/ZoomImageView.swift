@@ -44,10 +44,13 @@ open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
       return imageView.image
     }
     set {
-
+      let oldImage = imageView.image
       imageView.image = newValue
-      oldSize = nil
-      updateImageView()
+
+      if oldImage?.size != newValue?.size {
+        oldSize = nil
+        updateImageView()
+      }
     }
   }
 
