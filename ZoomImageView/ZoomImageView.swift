@@ -160,6 +160,7 @@ open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
     size.height = round(size.height)
     size.width = round(size.width)
 
+    zoomScale = 1
     maximumZoomScale = image.size.width / size.width
     imageView.bounds.size = size
     contentSize = size
