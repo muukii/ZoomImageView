@@ -111,6 +111,10 @@ open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
     updateImageView()
   }
 
+  open override var intrinsicContentSize: CGSize {
+    return imageView.intrinsicContentSize
+  }
+
   private var oldSize: CGSize?
 
   private func updateImageView() {
