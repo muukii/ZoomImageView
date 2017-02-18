@@ -25,19 +25,20 @@ import ZoomImageView
 
 class ViewController: UIViewController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        self.imageView.image = #imageLiteral(resourceName: "5")
-    }
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    // Do any additional setup after loading the view, typically from a nib.
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    self.imageView.zoomMode = .fill
+    self.imageView.image = #imageLiteral(resourceName: "5")
+  }
 
-    @IBOutlet weak var imageView: ZoomImageView!
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
+
+  @IBOutlet weak var imageView: ZoomImageView!
 
 }
 

@@ -54,6 +54,12 @@ open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
     }
   }
 
+  open override var intrinsicContentSize: CGSize {
+    return imageView.intrinsicContentSize
+  }
+
+  private var oldSize: CGSize?
+
   // MARK: - Initializers
 
   public override init(frame: CGRect) {
@@ -67,6 +73,16 @@ open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
   }
 
   // MARK: - Functions
+
+  open func scrollToCenter() {
+
+    let centerOffset = CGPoint(
+      x: (contentSize.width / 2) - (bounds.width / 2),
+      y: (contentSize.height / 2) - (bounds.height / 2)
+    )
+
+    contentOffset = centerOffset
+  }
 
   open func setup() {
 
@@ -110,12 +126,6 @@ open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
     super.updateConstraints()
     updateImageView()
   }
-
-  open override var intrinsicContentSize: CGSize {
-    return imageView.intrinsicContentSize
-  }
-
-  private var oldSize: CGSize?
 
   private func updateImageView() {
 
