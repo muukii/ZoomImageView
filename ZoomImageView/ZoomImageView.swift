@@ -67,6 +67,12 @@ open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
     setup()
   }
 
+  public init(image: UIImage) {
+    super.init(frame: CGRect.zero)
+    self.image = image
+    setup()
+  }
+
   public required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     setup()
@@ -216,7 +222,7 @@ open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
     /// are aligned in realtime and always aligned with corners of scrollview.
     let horizontalOffest = (boundingSize.width > contentSize.width) ? ((boundingSize.width - contentSize.width) * 0.5): 0.0
     let verticalOffset = (boundingSize.height > contentSize.height) ? ((boundingSize.height - contentSize.height) * 0.5): 0.0
-    
+
     return CGPoint(x: contentSize.width * 0.5 + horizontalOffest,  y: contentSize.height * 0.5 + verticalOffset)
   }
 }
