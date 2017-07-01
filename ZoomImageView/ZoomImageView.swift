@@ -161,7 +161,7 @@ open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
         minimumSize.height = minimumSize.width / aspectRatio.width * aspectRatio.height
       }
       else if (heightRatio > widthRatio) {
-        minimumSize.width = minimumSize.height / aspectRatio.height * aspectRatio.width
+//        minimumSize.width = minimumSize.height / aspectRatio.height * aspectRatio.width
       }
       return CGSize(width: ceil(minimumSize.width), height: ceil(minimumSize.height))
     }
