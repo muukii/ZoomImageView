@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'ZoomImageView'
-  s.version          = '0.3.4'
+  s.version          = '0.3.5'
   s.summary          = "UI component library to expand the photo, such as Apple's Photos app"
   s.homepage         = 'https://github.com/muukii/ZoomImageView'
   s.license          = { :type => 'MIT', :file => 'LICENCE' }
