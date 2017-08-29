@@ -180,7 +180,7 @@
 					4BCD65E71DB24983002C5877 = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = KU2QEJ9K3Z;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
 					4BCD65F81DB249E2002C5877 = {
@@ -393,7 +393,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -413,7 +414,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = me.muukii.ZoomImageView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
