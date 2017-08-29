@@ -34,7 +34,9 @@ if you have some idea. please don't hesitate to share your thoughts.🙏✨
 
 ### CocoaPods
 
-TODO
+```
+pod 'ZoomImageView'
+```
 
 ### Carthage
 ```
