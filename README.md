@@ -13,7 +13,7 @@ UI component library to expand the photo, such as Apple's Photos app. 🗻
 
 ## Requirements
 
-Swift **3.0**  iOS📱 8.0+
+Swift **4.0**  iOS📱 8.0+
 
 ## Usage
 

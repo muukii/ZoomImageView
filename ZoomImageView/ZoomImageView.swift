@@ -22,7 +22,7 @@
 
 import UIKit
 
-open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
+open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
 
   public enum ZoomMode {
     case fit
@@ -91,6 +91,12 @@ open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
   }
 
   open func setup() {
+
+    #if swift(>=3.2)
+      if #available(iOS 11, *) {
+        contentInsetAdjustmentBehavior = .never
+      }
+    #endif
 
     backgroundColor = UIColor.clear
     delegate = self
@@ -196,22 +202,23 @@ open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
   }
 
   // MARK: - UIScrollViewDelegate
-  public func scrollViewDidZoom(_ scrollView: UIScrollView) {
+  @objc dynamic public func scrollViewDidZoom(_ scrollView: UIScrollView) {
     imageView.center = contentCenter(forBoundingSize: bounds.size, contentSize: contentSize)
   }
 
-  public func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
+  @objc dynamic public func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
 
   }
 
-  public func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+  @objc dynamic public func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
 
   }
 
-  public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+  @objc dynamic public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
     return imageView
   }
 
+  @inline(__always)
   private func contentCenter(forBoundingSize boundingSize: CGSize, contentSize: CGSize) -> CGPoint {
 
     /// When the zoom scale changes i.e. the image is zoomed in or out, the hypothetical center
