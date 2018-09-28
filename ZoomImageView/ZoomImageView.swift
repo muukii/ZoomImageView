@@ -31,7 +31,7 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
 
   // MARK: - Properties
 
-  public let imageView = UIImageView()
+  private let imageView = UIImageView()
 
   public var zoomMode: ZoomMode = .fit {
     didSet {
