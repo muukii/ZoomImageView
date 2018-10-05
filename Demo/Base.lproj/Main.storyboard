@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -18,16 +21,43 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dXR-uB-hDw" customClass="ZoomImageView" customModule="ZoomImageView">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dXR-uB-hDw" customClass="ZoomImageView" customModule="ZoomImageView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="S5F-Sd-XgC">
+                                <rect key="frame" x="0.0" y="603" width="375" height="64"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dqp-dq-EQ5">
+                                        <rect key="frame" x="0.0" y="0.0" width="187.5" height="64"/>
+                                        <state key="normal" title="Fill"/>
+                                        <connections>
+                                            <action selector="didTapFillButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="U6q-lY-KZD"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rkS-Nv-BNW">
+                                        <rect key="frame" x="187.5" y="0.0" width="187.5" height="64"/>
+                                        <state key="normal" title="Fit"/>
+                                        <connections>
+                                            <action selector="didTapFitButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pNX-Cf-JM1"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="YZT-p6-fnH"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="dXR-uB-hDw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="9ch-7g-gHC"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="dXR-uB-hDw" secondAttribute="bottom" id="kQG-Vg-j9f"/>
+                            <constraint firstAttribute="trailing" secondItem="S5F-Sd-XgC" secondAttribute="trailing" id="ZG7-Oh-wlZ"/>
                             <constraint firstAttribute="trailing" secondItem="dXR-uB-hDw" secondAttribute="trailing" id="kbG-H2-Tnp"/>
                             <constraint firstItem="dXR-uB-hDw" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="qfH-in-MVs"/>
+                            <constraint firstItem="S5F-Sd-XgC" firstAttribute="top" secondItem="dXR-uB-hDw" secondAttribute="bottom" id="uwu-BV-Spp"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="S5F-Sd-XgC" secondAttribute="bottom" id="xSP-fb-uv8"/>
+                            <constraint firstItem="S5F-Sd-XgC" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="z4g-zb-F8C"/>
                         </constraints>
                     </view>
                     <connections>
@@ -36,7 +66,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-167.19999999999999" y="147.97601199400302"/>
+            <point key="canvasLocation" x="-703.20000000000005" y="90.404797601199405"/>
         </scene>
     </scenes>
 </document>
