@@ -103,7 +103,11 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
     imageView.contentMode = .scaleAspectFill
     showsVerticalScrollIndicator = false
     showsHorizontalScrollIndicator = false
+    #if swift(>=4.2)
+    decelerationRate = .fast
+    #else
     decelerationRate = UIScrollViewDecelerationRateFast
+    #endif
     addSubview(imageView)
 
     let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
