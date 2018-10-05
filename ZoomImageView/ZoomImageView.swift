@@ -195,9 +195,12 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
 
   @objc private func handleDoubleTap(_ gestureRecognizer: UITapGestureRecognizer) {
     if self.zoomScale == 1 {
-      zoom(to: zoomRectFor(scale: max(1, maximumZoomScale / 3),
-                           with: gestureRecognizer.location(in: gestureRecognizer.view)),
-           animated: true)
+      zoom(
+        to: zoomRectFor(
+          scale: max(1, maximumZoomScale / 3),
+          with: gestureRecognizer.location(in: gestureRecognizer.view)),
+        animated: true
+      )
     } else {
       setZoomScale(1, animated: true)
     }
@@ -208,8 +211,8 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
     let center = imageView.convert(center, from: self)
 
     var zoomRect = CGRect()
-    zoomRect.size.height = imageView.bounds.height / scale
-    zoomRect.size.width = imageView.bounds.width / scale
+    zoomRect.size.height = bounds.height / scale
+    zoomRect.size.width = bounds.width / scale
     zoomRect.origin.x = center.x - zoomRect.width / 2.0
     zoomRect.origin.y = center.y - zoomRect.height / 2.0
 
