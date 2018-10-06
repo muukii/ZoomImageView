@@ -31,7 +31,11 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
 
   // MARK: - Properties
 
-  private let imageView = UIImageView()
+  private let imageView: UIImageView = {
+    let imageView = UIImageView()
+    imageView.layer.allowsEdgeAntialiasing = true
+    return imageView
+  }()
 
   public var zoomMode: ZoomMode = .fit {
     didSet {
