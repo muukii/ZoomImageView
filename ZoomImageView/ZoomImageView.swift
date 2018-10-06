@@ -40,6 +40,7 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
   public var zoomMode: ZoomMode = .fit {
     didSet {
       updateImageView()
+      scrollToCenter()
     }
   }
 
@@ -55,6 +56,7 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
         oldSize = nil
         updateImageView()
       }
+      scrollToCenter()
     }
   }
 
@@ -87,8 +89,8 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
   open func scrollToCenter() {
 
     let centerOffset = CGPoint(
-      x: (contentSize.width / 2) - (bounds.width / 2),
-      y: (contentSize.height / 2) - (bounds.height / 2)
+      x: contentSize.width > bounds.width ? (contentSize.width / 2) - (bounds.width / 2) : 0,
+      y: contentSize.height > bounds.height ? (contentSize.height / 2) - (bounds.height / 2) : 0
     )
 
     contentOffset = centerOffset
@@ -107,11 +109,6 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
     imageView.contentMode = .scaleAspectFill
     showsVerticalScrollIndicator = false
     showsHorizontalScrollIndicator = false
-    #if swift(>=4.2)
-    decelerationRate = .fast
-    #else
-    decelerationRate = UIScrollViewDecelerationRateFast
-    #endif
     addSubview(imageView)
 
     let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
@@ -198,7 +195,7 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
     maximumZoomScale = image.size.width / size.width
     imageView.bounds.size = size
     contentSize = size
-    imageView.center = contentCenter(forBoundingSize: bounds.size, contentSize: contentSize)
+    imageView.center = ZoomImageView.contentCenter(forBoundingSize: bounds.size, contentSize: contentSize)
   }
 
   @objc private func handleDoubleTap(_ gestureRecognizer: UITapGestureRecognizer) {
@@ -229,7 +226,7 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
 
   // MARK: - UIScrollViewDelegate
   @objc dynamic public func scrollViewDidZoom(_ scrollView: UIScrollView) {
-    imageView.center = contentCenter(forBoundingSize: bounds.size, contentSize: contentSize)
+    imageView.center = ZoomImageView.contentCenter(forBoundingSize: bounds.size, contentSize: contentSize)
   }
 
   @objc dynamic public func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
@@ -245,7 +242,7 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
   }
 
   @inline(__always)
-  private func contentCenter(forBoundingSize boundingSize: CGSize, contentSize: CGSize) -> CGPoint {
+  private static func contentCenter(forBoundingSize boundingSize: CGSize, contentSize: CGSize) -> CGPoint {
 
     /// When the zoom scale changes i.e. the image is zoomed in or out, the hypothetical center
     /// of content view changes too. But the default Apple implementation is keeping the last center
