@@ -192,7 +192,7 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
     size.width = round(size.width)
 
     zoomScale = 1
-    maximumZoomScale = image.size.width / size.width
+    maximumZoomScale = 4
     imageView.bounds.size = size
     contentSize = size
     imageView.center = ZoomImageView.contentCenter(forBoundingSize: bounds.size, contentSize: contentSize)
@@ -202,7 +202,7 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
     if self.zoomScale == 1 {
       zoom(
         to: zoomRectFor(
-          scale: max(1, maximumZoomScale / 3),
+          scale: max(1, 3),
           with: gestureRecognizer.location(in: gestureRecognizer.view)),
         animated: true
       )
